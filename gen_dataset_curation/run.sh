@@ -1,12 +1,12 @@
-len_values=(1 3 5)
+len_values=(1)
 # k_values=(10 20 50 100)
 # # m_values=('rand' 'ppl' 'ppl_h')
 # # n_values=(0.05 1)
 
-# # 모든 조합에 대한 반복
+# length 별 클러스터링 생성
 for len in "${len_values[@]}"
 do
-   python main_bak.py --len $len
+   python generate_sentence_embedding.py --len $len
 done
 
 # for len in "${len_values[@]}"
@@ -20,3 +20,8 @@ done
 #    done
 #    wait
 # done
+
+python generate_sentence_embedding.py --len 1 --device 0
+python generate_sentence_embedding.py --len 5 --device 1
+python generate_sentence_embedding.py --len 10 --device 2
+python generate_sentence_embedding.py --len 20 --device 3
