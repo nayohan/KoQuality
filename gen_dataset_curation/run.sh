@@ -21,7 +21,7 @@ done
 #    wait
 # done
 
-python generate_sentence_embedding.py --len 1 --device 0
-python generate_sentence_embedding.py --len 5 --device 1
-python generate_sentence_embedding.py --len 10 --device 2
-python generate_sentence_embedding.py --len 20 --device 3
+python generate_sentence_embedding.py --len 1 --device 0 &
+python generate_sentence_embedding.py --len 5 --device 1 &
+python generate_sentence_embedding.py --len 10 --device 2 &
+python generate_sentence_embedding.py --len 20 --device 3 &

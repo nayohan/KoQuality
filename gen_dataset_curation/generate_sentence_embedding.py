@@ -28,13 +28,12 @@ class DataSelect:
 
     def make_split_len(self, len):
         df_list = [] # df 다섯개 담을 리스트 선언
-        for i in range(len):
+        for i in range(int(len)):
             if i == len-1:
                 now_len_df = self.df[self.df['len'] >= self.df['len'].quantile(q=((i)/len))]
             else:
                 now_len_df = self.df[(self.df['len'] >= self.df['len'].quantile(q=((i)/len))) & (self.df['len'] < self.df['len'].quantile(q=((i+1)/len)))]
-            # now_len_df['len_group'] = i
-            now_len_df.loc[:, 'len_group'] = i
+            now_len_df['len_group'] = i
             df_list.append(now_len_df)
         return df_list
 
@@ -56,10 +55,8 @@ class DataSelect:
     def run_clustering(self, len, df_list, np_emb_all_list, K):
         temp = copy.deepcopy(df_list)
         for i in range(len):
-            model = KMeans(random_state=42, n_init=10)
+            model = KMeans(random_state=42, n_clusters=K, n_init=10)
             model.fit(np_emb_all_list[i])
-            # visualizer = KElbowVisualizer(model, k=(1, K))
-            # visualizer.fit(np_emb_all_list[i])
             text_clusterindex = model.fit_predict(np_emb_all_list[i])
             temp[i]['cluster'] = text_clusterindex
         return temp
@@ -69,19 +66,37 @@ def concat_df_list(new_df_list): # length 별 쪼개진 5개 concat
     final_df = pd.concat(new_df_list, ignore_index=True)
     return final_df
 
-def sampling_data(df_list, M, N):
+def sampling_data(df_list, K, M, N):
     new_df_list = []
     for df in df_list:
         if M == 'rand':
             df = df.sample(frac=N)
         elif M == 'ppl':
             df = df.sort_values('ppl')
-            small_range = list(range(0, len(df), int(1 / N)))
-            df = df.iloc[small_range, :]
+            df_cluster_list = [df['cluster']==k for k in range(K)]
+            clustered_df_list = [df[df_bool] for df_bool in df_cluster_list]
+            
+            clustered_ppl_df_list = []
+            for clustered_df in clustered_df_list:
+                small_range = list(range(0, len(clustered_df), int(1 / N)))
+                clustered_ppl_df = clustered_df.iloc[small_range, :]
+                clustered_ppl_df_list.append(clustered_ppl_df)
+            df = pd.concat(clustered_ppl_df_list, ignore_index=True)
+            
         elif M == 'ppl_h':
-            prop = int(N * len(df))
             df = df.sort_values('ppl', ascending=False)
-            df = df[:prop]
+            df_cluster_list = [df['cluster']==k for k in range(K)]
+            clustered_df_list = [df[df_bool] for df_bool in df_cluster_list]
+            
+            clustered_ppl_df_list = []
+            for clustered_df in clustered_df_list:
+                prop = int(N * len(clustered_df))
+                clustered_df = clustered_df.drop_duplicates(['ppl'])
+                print('c:', clustered_df)
+                clustered_ppl_df = clustered_df[:prop]
+                clustered_ppl_df_list.append(clustered_ppl_df)
+            df = pd.concat(clustered_ppl_df_list, ignore_index=True)
+
         new_df_list.append(df)
     return new_df_list
 
@@ -91,17 +106,14 @@ if __name__ == "__main__":
     parser.add_argument("--k", type=int, help="Number of clusters for task 'run_clustering'")
     # parser.add_argument("--m", type=str, help="Sampling method for task 'sampling_data'")
     # parser.add_argument("--n", type=float, help="Sampling ratio for task 'sampling_data'")
-    parser.add_argument("--device", type=int, help="Gpu device number")
+    parser.add_argument("--device", type=int, default=0, help="Gpu device number")
     args = parser.parse_args()
     
-    # os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device)
-    print('device:', args.device)
-    # 여러 인자 값을 리스트로 정의합니다.
     # len_values = [1, 5]
-    k_values = [10, 20, 50, 100]
-    m_values = ['rand', 'ppl', 'ppl_h']
-    n_values = [0.01, 0.05, 0.1]
+    k_values = [1, 10, 20, 50, 100]
+    m_values = ['rand']#, 'ppl_h']
+    n_values = [0.01]#, 0.05, 0.1]
 
     # 1. Dataset Concat 및 Preprocess
     # df = preprocess_dataset.make_dataset()
@@ -113,14 +125,13 @@ if __name__ == "__main__":
     # concat_dataset.push_to_hub(f'nayohan/koquality_raw')
 
     # 2. Perplexity 계산하여 업데이트
-    # using gen
-    
+    # use gen_perplexity
     
     # 3. 임베딩 생성 및 길이기반 클러스터링
-    # 모델 로드
-
     # ppl_dataset_path = '/home/uj-user/Yo/HiT5/HCLT/gen_perplexity/result_ppl/'
     # ppl_df = pd.read_json(f'{ppl_dataset_path}koquality_raw_ppl_polyglot-ko-1.3b_nospace.json', lines=True, orient='records')
+    # # ppl_df = ppl_df.loc[:10000, :]
+    # ppl_df['len_group']=""
     # calc = DataSelect(ppl_df)
     
     # device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
@@ -133,7 +144,7 @@ if __name__ == "__main__":
     # for k_val in k_values:
     #     clustered_df_list = calc.run_clustering(args.len, split_len_df_list, np_emb_all_list, k_val)
     #     final_df = pd.concat(clustered_df_list, ignore_index=True)
-    #     final_df = final_df.sort_values(by=['len', 'ppl'], axis=0)
+    #     final_df = final_df.sort_values(by=['len_group', 'cluster', 'ppl', 'len'], axis=0)
     #     final_df = final_df[["ppl", "len", "len_group", "cluster", "group", "instruction", "output"]]
 
     #     output_dir = f"result_ppl_instruction_len{args.len}"
@@ -141,13 +152,12 @@ if __name__ == "__main__":
     #     filename = f"result_len{args.len}_k{k_val}.json"
     #     output_path = os.path.join(output_dir, filename)
     #     final_df.to_json(output_path, orient='records', lines=True, force_ascii=False)
-        
-    #     # upload to huggingface dataset
-    #     # raw_train = Dataset.from_pandas(final_df)
-    #     # final_dataset = DatasetDict({'train': raw_train})
-    #     # final_dataset = final_dataset.remove_columns(['ppl  '])
-    #     # final_dataset.push_to_hub(f'nayohan/koquality_len{args.len}_k{k_val}')
-        
+
+        # upload to huggingface dataset
+        # raw_train = Dataset.from_pandas(final_df)
+        # final_dataset = DatasetDict({'train': raw_train})
+        # final_dataset = final_dataset.remove_columns(['ppl  '])
+        # final_dataset.push_to_hub(f'nayohan/koquality_len{args.len}_k{k_val}')
         
     # 4. Method 샘플링 및 샘플링 N%
     ppl_dataset_path = f'/home/uj-user/Yo/HiT5/HCLT/gen_dataset_curation/result_ppl_instruction_len{args.len}'
@@ -164,10 +174,11 @@ if __name__ == "__main__":
         
         for m_val in m_values:
             for n_val in n_values:
-                sampled_df_list = sampling_data(clustered_df_list, m_val, n_val)
+                sampled_df_list = sampling_data(clustered_df_list, k_val, m_val, n_val)
                 result = concat_df_list(sampled_df_list)
+                result = result.sort_values(by=['len_group', 'cluster', 'ppl', 'len'], axis=0)
                 # 결과를 저장할 디렉토리 생성
-                output_dir = f"final_results_len{args.len}"
+                output_dir = f"final_results"
                 os.makedirs(output_dir, exist_ok=True)
 
                 # 파일 이름 생성
@@ -176,6 +187,5 @@ if __name__ == "__main__":
 
                 # 데이터프레임을 JSON 파일로 저장
                 # final_df = final_df[["ppl", "len", "len_group", "cluster", "group", "instruction", "output"]]
-
                 # final_result = pd.DataFrame({"cluster": result['cluster'], "ppl": result['ppl'], "instruction": result['instruction'], "output": result['output']})
                 result.to_json(output_path, orient='records', lines=True, force_ascii=False)
