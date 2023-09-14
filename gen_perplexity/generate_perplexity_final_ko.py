@@ -9,18 +9,18 @@ import pandas as pd
 os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 # os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
-dataset_name = 'nayohan/koquality_raw'
 # dataset_name = 'nlpai-lab/kullm-v2'
 # dataset_name = 'junelee/sharegpt_deepl_ko'
-model_name = 'EleutherAI/polyglot-ko-1.3b'
+dataset_name = 'nayohan/koquality_raw'
+
 # model_name = 'gpt2'
+model_name = 'EleutherAI/polyglot-ko-1.3b'
  
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.add_special_tokens({'pad_token': '[PAD]', 'bos_token':'<|endoftext|>'})
 
 dataset = load_dataset(dataset_name)
 dataset = dataset.filter(lambda example: len(example['instruction'])>0, num_proc=24) # filtering under 0 token length
-print(dataset)
 
 # filtering over 1024 token length
 def encode_preprocess(examples):
@@ -44,8 +44,6 @@ print(preprocessed_data)
 # calculate perplexity
 perplexity = evaluate.load("perplexity", module_type="metric")
 instruction = preprocessed_data['train']['trunc_instruction']
-# instruction = df[df['group']=='koalpaca']['trunc_instruction'].to_list()
-
 
 # update perplexity
 len_instruction = [len(text) for text in instruction]
