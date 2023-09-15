@@ -115,8 +115,6 @@ if __name__ == "__main__":
     n_values = [0.01]#, 0.05, 0.1]
 
 
-    # 2. Perplexity 계산하여 업데이트
-    # use gen_perplexity
     
     # 3. 임베딩 생성 및 길이기반 클러스터링
     # ppl_dataset_path = '/home/uj-user/Yo/HiT5/HCLT/gen_perplexity/result_ppl/'
