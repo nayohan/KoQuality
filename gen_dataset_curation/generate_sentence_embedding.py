@@ -8,7 +8,6 @@ import torch
 import copy
 import argparse
 import glob
-import preprocess_dataset
 from glob import glob
 from tqdm import tqdm
 
@@ -115,14 +114,6 @@ if __name__ == "__main__":
     m_values = ['rand']#, 'ppl_h']
     n_values = [0.01]#, 0.05, 0.1]
 
-    # 1. Dataset Concat 및 Preprocess
-    # df = preprocess_dataset.make_dataset()
-    # from datasets import Dataset, DatasetDict
-    # raw_train = Dataset.from_pandas(df)
-    # concat_dataset = DatasetDict({'train': raw_train})
-    # concat_dataset = concat_dataset.remove_columns(['__index_level_0__',])
-    # concat_dataset = concat_dataset.sort_values(by=['len'], axis=0)
-    # concat_dataset.push_to_hub(f'nayohan/koquality_raw')
 
     # 2. Perplexity 계산하여 업데이트
     # use gen_perplexity
@@ -158,6 +149,7 @@ if __name__ == "__main__":
         # final_dataset = DatasetDict({'train': raw_train})
         # final_dataset = final_dataset.remove_columns(['ppl  '])
         # final_dataset.push_to_hub(f'nayohan/koquality_len{args.len}_k{k_val}')
+        
         
     # 4. Method 샘플링 및 샘플링 N%
     ppl_dataset_path = f'/home/uj-user/Yo/HiT5/HCLT/gen_dataset_curation/result_ppl_instruction_len{args.len}'
