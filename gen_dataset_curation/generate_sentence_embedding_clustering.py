@@ -56,6 +56,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process data using DataSelect class")
     parser.add_argument("--len", type=int, default=10, help="make_split_len_group")
     parser.add_argument("--device", type=int, default=0, help="gpu device number")
+    parser.add_argument("-d", "--dataset_name", type=str, default='beomi/KoAlpaca-v1.1a', help="raw corpus dataset name")
+    parser.add_argument("-m", "--model_name", type=str, default='EleutherAI/polyglot-ko-1.3b', help="model name when calc perplexity")
+    parser.add_argument("-e", "--emb_model_name", type=str, default=True, help="model name when make sentence embedding")
+    parser.add_argument("--load_ppl_path", type=str, default='./result_ppl', help="ppl added corpus load path")
+    parser.add_argument("--save_cluster_path", type=str, default='./result_ppl_len', help="save path of the cluster column added to the ppl corpus")
     args = parser.parse_args()
     
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.device)
@@ -63,22 +68,17 @@ if __name__ == "__main__":
     m_values = ['rand', 'ppl', 'ppl_h']
     n_values = [0.01, 0.05, 0.1]
 
-    dataset_name = 'nayohan/koquality_raw'
-    model_name = 'EleutherAI/polyglot-ko-1.3b'
-    embedding_model_name = 'BM-K/KoSimCSE-roberta-multitask'
-    ppl_dataset_path = './result_ppl/'
-    
     # 3. generate sentence embedding and length(L) based clustering(K)
-    datasetname = dataset_name.split('/')[-1]
-    modelname = model_name.split('/')[-1]
-    ppl_df = pd.read_json(  f"./{ppl_dataset_path}/{datasetname}_ppl_{modelname}.json", lines=True, orient='records')
+    args.datasetname = args.dataset_name.split('/')[-1]
+    args.modelname = args.model_name.split('/')[-1]
+    ppl_df = pd.read_json(  f"./{args.load_ppl_path}/{args.datasetname}_ppl_{args.modelname}.json", lines=True, orient='records')
     # ppl_df = ppl_df.loc[:10000, :]
     # ppl_df['len_group']=""
     
     calc = SentenceEmbeddingClustering(ppl_df)
     device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    model = AutoModel.from_pretrained(embedding_model_name).to(device)
-    tokenizer = AutoTokenizer.from_pretrained(embedding_model_name)
+    model = AutoModel.from_pretrained(args.emb_model_name).to(device)
+    tokenizer = AutoTokenizer.from_pretrained(args.emb_model_name)
     
     split_len_df_list = calc.make_split_len(args.len)
     np_emb_all_list = calc.make_embedding(calc.make_split_len(args.len), tokenizer, model, device)
@@ -89,9 +89,9 @@ if __name__ == "__main__":
         final_df = final_df.sort_values(by=['len_group', 'cluster', 'ppl', 'len'], axis=0)
         final_df = final_df[["ppl", "len", "len_group", "cluster", "group", "instruction", "output"]]
 
-        output_dir = f"result_ppl_instruction_len{args.len}"
+        output_dir = f"{args.save_cluster_path}{args.len}"
         os.makedirs(output_dir, exist_ok=True)
-        filename = f"result_len{args.len}_k{k_val}.json"
+        filename = f"len{args.len}_k{k_val}.json"
         output_path = os.path.join(output_dir, filename)
         final_df.to_json(output_path, orient='records', lines=True, force_ascii=False)
 

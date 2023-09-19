@@ -1,4 +1,4 @@
-# Works on RTX3090,RTX3090,A30 (VRam 24G) x4 + Ram 256GB / using deepspeed3 + cpu offloading
+# Works on RTX3090,RTX3090,A30 (VRam 24G) x4 + Ram 128GB / using deepspeed3 + cpu offloading
 torchrun --nproc_per_node=4 --master_port=34321 run_clm.py \
 --model_name_or_path='EleutherAI/polyglot-ko-1.3b' \
 --train_file='KoAlpaca_v1.1a_textonly.json' \

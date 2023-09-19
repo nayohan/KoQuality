@@ -31,8 +31,8 @@ do
         do
             for n in $smaple_n
             do
-                train_path="train_dataset/final_results/"
-                train_file="result_len${l}_k${k}_m${m}_n${n}"
+                train_path="train_dataset/results_final_len/"
+                train_file="len${l}_k${k}_m${m}_n${n}"
                 model_name="polyglot-ko-5.8b"
 
                 torchrun --nproc_per_node=4 --master_port=34321 run_clm.py \
