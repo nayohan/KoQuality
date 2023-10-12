@@ -15,9 +15,11 @@ KoQuality 데이터셋은 [DILAB-HYU/KoQuality](https://huggingface.co/datasets/
 <br/>
 
 ## Results
-![image](https://github.com/nayohan/KoQuality/assets/18652811/b6eac834-4899-4c59-a215-ef129867cb71)
-각 데이터셋 별로 큰 차이가 없는 경우나, Pertrained LLM보다는 높은성능을 보이지 못하는 결과를 보이기도 하지만, 전체적으로 성능향상 및 적은 데이터셋을 활용함으로써 오는 학습시간 단축의 효과가 있습니다.
+KoQuality 데이터셋으로 학습된 [DILAB-HYU/KoQuality-Polyglot-5.8b](https://huggingface.co/DILAB-HYU/KoQuality-Polyglot-5.8b) 의 결과는 다음과 같습니다. 각 데이터셋 별로 큰 차이가 없는 경우나, Pertrained LLM보다는 높은성능을 보이지 못하는 결과를 보이기도 하지만, 전체적으로 성능향상 및 적은 데이터셋을 활용함으로써 오는 학습시간 단축의 효과가 있습니다.
+<br/>
 
+
+![image](https://github.com/nayohan/KoQuality/assets/18652811/b6eac834-4899-4c59-a215-ef129867cb71)
 <br/>
 
 
