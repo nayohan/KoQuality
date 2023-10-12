@@ -1,13 +1,19 @@
 # KoQuality
 ![image](https://github.com/nayohan/KoQuality/assets/18652811/93b46fbe-7d73-4ab6-aaf3-2ef47e889462)
 
+<br/>
+
 한국어 데이터셋에서 여러 명령어 튜닝 데이터셋의 통합하여 하나의 고품질 데이터셋을 만들고자 하였습니다. 기존의 데이터셋(KoAlpaca v1.1, Vicuna, Alpaca, Dolly, OIG)에서 명령어 문장을 큐레이션하여 고품질의 명령어 데이터셋인 KoQuality를 생성하였습니다. KoQuality는 기존 데이터셋의 1% 데이터셋으로 한국어 언어모델에 명령어 튜닝을 진행하였으며, 제로샷 KoBEST 벤치마크 및 Open-Ko-LLM 리더보드에서 기존의 모델과 비슷하거나 성능 향상을 보입니다.
+
+<br/>
+
 ![image](https://github.com/nayohan/KoQuality/assets/18652811/dc822126-1a58-4d35-aba1-6271b66414ee)
 
 (*2023-10-13 02:00기준, Polyglot5.8B 모델 비교) /
 KoQuality 데이터셋은 [DILAB-HYU/KoQuality](https://huggingface.co/datasets/DILAB-HYU/KoQuality)에서  다운 받을 수 있습니다.
 
 <br/>
+
 
 ## Sampled Examples
 ![image](https://github.com/nayohan/KoQuality/assets/18652811/f7d60417-29fb-42bc-b2dc-b61949f49fd1)
@@ -49,7 +55,7 @@ python generate_perplexity.py --device 3 -d <username>/koquality_raw -m Eleuther
 
 
 #### 3. Generate sentence embeddings and proceed with clustering
-Contrastive Learning으로 학습된 [BM-K/KoSimCSE-roberta](https://huggingface.co/BM-K/KoSimCSE-roberta-multitask)를 활용하여 명령어 문장을 Sentence Embedding하고, 이를 K-means Clustering으로 그룹화 하였다. 길이 그룹별 클러스터링을 진행하기 위해, 길이 그룹의 개수를 L : {1, 5, 10, 20}로, 클러스터링 개수를 K : {10, 20, 50, 100}으로 실험을 진행하였으며, 최종적으로 L=10, K=100을 활용한다.
+Contrastive Learning으로 학습된 [BM-K/KoSimCSE-roberta](https://huggingface.co/BM-K/KoSimCSE-roberta-multitask)를 활용하여 명령어 문장을 Sentence Embedding하고, 이를 K-means Clustering으로 그룹화 하였다. 길이 그룹별 클러스터링을 진행하기 위해, 길이 그룹의 개수를 L : {1, 5, 10, 20}로, 클러스터링 개수를 K : {10, 20, 50, 100}으로 실험을 진행하였으며, 최종적으로 L=5, K=100을 활용한다.
 ```
 python generate_sentence_embedding_clustering.py --len 1 --device 0 -d <username>/koquality_raw -m EleutherAI/polyglot-ko-1.3b -e BM-K/KoSimCSE-roberta-multitask &
 python generate_sentence_embedding_clustering.py --len 5 --device 1 -d <username>/koquality_raw -m EleutherAI/polyglot-ko-1.3b -e BM-K/KoSimCSE-roberta-multitask & 
