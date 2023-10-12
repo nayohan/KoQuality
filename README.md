@@ -1,17 +1,16 @@
 # KoQuality
-![image](https://github.com/nayohan/KoQuality/assets/18652811/c4ea9efa-4f21-4d97-ab8a-1a02a13eaa52)
+![image](https://github.com/nayohan/KoQuality/assets/18652811/93b46fbe-7d73-4ab6-aaf3-2ef47e889462)
 
 한국어 데이터셋에서 여러 명령어 튜닝 데이터셋의 통합하여 하나의 고품질 데이터셋을 만들고자 하였습니다. 기존의 데이터셋(KoAlpaca v1.1, Vicuna, Alpaca, Dolly, OIG)에서 명령어 문장을 큐레이션하여 고품질의 명령어 데이터셋인 KoQuality를 생성하였습니다. KoQuality는 기존 데이터셋의 1% 데이터셋으로 한국어 언어모델에 명령어 튜닝을 진행하였으며, 제로샷 KoBEST 벤치마크 및 Open-Ko-LLM 리더보드에서 기존의 모델과 비슷하거나 성능 향상을 보입니다.
+![image](https://github.com/nayohan/KoQuality/assets/18652811/dc822126-1a58-4d35-aba1-6271b66414ee)
 
-![image](https://github.com/nayohan/KoQuality/assets/18652811/3a82c172-ae40-45f6-8c16-2477916dca65)
 (*2023-10-13 02:00기준, Polyglot5.8B 모델 비교) /
 KoQuality 데이터셋은 [DILAB-HYU/KoQuality](https://huggingface.co/datasets/DILAB-HYU/KoQuality)에서  다운 받을 수 있습니다.
 
 <br/>
 
 ## Sampled Examples
-![image](https://github.com/nayohan/KoQuality/assets/18652811/8fdd4a32-ea71-4c12-a654-6cee855d0240)
-
+![image](https://github.com/nayohan/KoQuality/assets/18652811/f7d60417-29fb-42bc-b2dc-b61949f49fd1)
 
 <br/>
 
@@ -19,8 +18,8 @@ KoQuality 데이터셋은 [DILAB-HYU/KoQuality](https://huggingface.co/datasets/
 KoQuality 데이터셋으로 학습된 [DILAB-HYU/KoQuality-Polyglot-5.8b](https://huggingface.co/DILAB-HYU/KoQuality-Polyglot-5.8b) 의 결과는 다음과 같습니다. 각 데이터셋 별로 큰 차이가 없는 경우나, Pertrained LLM보다는 높은성능을 보이지 못하는 결과를 보이기도 하지만, 전체적으로 성능향상 및 적은 데이터셋을 활용함으로써 오는 학습시간 단축의 효과가 있습니다.
 <br/>
 
+![image](https://github.com/nayohan/KoQuality/assets/18652811/82d6bb6f-f0f6-43ad-ba8d-ffaa4427350e)
 
-![image](https://github.com/nayohan/KoQuality/assets/18652811/b6eac834-4899-4c59-a215-ef129867cb71)
 <br/>
 
 
