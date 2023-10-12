@@ -10,7 +10,8 @@ KoQuality 데이터셋은 [DILAB-HYU/KoQuality](https://huggingface.co/datasets/
 <br/>
 
 ## Sampled Examples
-![image](https://github.com/nayohan/KoQuality/assets/18652811/c688de7f-25ca-4980-81e8-72449891ff48)
+![image](https://github.com/nayohan/KoQuality/assets/18652811/8fdd4a32-ea71-4c12-a654-6cee855d0240)
+
 
 <br/>
 
