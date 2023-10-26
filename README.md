@@ -117,7 +117,7 @@ Please cite the repo if you use the data or code in this repo.
   title={KoQuality: 한국어 언어 모델을 위한 고품질 명령어 데이터 큐레이션},
   author={나요한 and 김다혜 and 채동규},
   journal={제 35 회 한글 및 한국어 정보처리 학술대회 (HCLT 2023)},
-  pages={245--248},
+  pages={306-311},
   year={2023},
   publisher={한국정보과학회}
 }
@@ -127,7 +127,7 @@ Please cite the repo if you use the data or code in this repo.
   title = {KoQuality: Curation of High-quality Instruction Data for Korean Language Models},
   author = {Na, Yohan and Kim, Dahye and Chae, Dong-Kyu},
   journal={Proceedings of the 35th Annual Conference on Human and Cognitive Language Technology (HCLT 2023)},
-  pages={},
+  pages={306-311},
   year = {2023},
 }
 ```
