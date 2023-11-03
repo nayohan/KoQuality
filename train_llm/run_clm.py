@@ -44,6 +44,7 @@ from transformers import (
     HfArgumentParser,
     Trainer,
     TrainingArguments,
+    EarlyStoppingCallback,
     default_data_collator,
     is_torch_tpu_available,
     set_seed,
@@ -54,6 +55,7 @@ from transformers.utils import check_min_version, send_example_telemetry
 from transformers.utils.versions import require_version
 
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
 # check_min_version("4.29.0.dev0")
 
@@ -572,6 +574,7 @@ def main():
         preprocess_logits_for_metrics=preprocess_logits_for_metrics
         if training_args.do_eval and not is_torch_tpu_available()
         else None,
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=10, early_stopping_threshold=0.0001)],
     )
 
     # Training
