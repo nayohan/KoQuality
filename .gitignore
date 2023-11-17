@@ -1,0 +1,3 @@
+*venv
+wandb
+train_llm/train_model

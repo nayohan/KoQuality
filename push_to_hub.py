@@ -50,3 +50,13 @@ from datasets import load_dataset
 # model.push_to_hub("DILAB-HYU/KoQuality-ko-ref-llama2-7b")
 # tokenizer = AutoTokenizer.from_pretrained('/home/uj-user/Yo/HiT5/HCLT/train_llm/KoQuality-ko-ref-llama2-7b')
 # tokenizer.push_to_hub("DILAB-HYU/KoQuality-ko-ref-llama2-7b")
+
+# model = AutoModelForCausalLM.from_pretrained('/home/closedai/.test/KoQuality/train_llm/train_model/koquality-polyglot-ko-12.8b')
+# model.push_to_hub("DILAB-HYU/koquality-polyglot-ko-12.8b")
+# tokenizer = AutoTokenizer.from_pretrained('./train_model/koquality-polyglot-ko-12.8b')
+# tokenizer.push_to_hub("DILAB-HYU/koquality-polyglot-ko-12.8b")
+
+# model = AutoModelForCausalLM.from_pretrained('./train_model/koquality-polyglot-ko-12.8b-inst')
+# model.push_to_hub("nayohan/polyglot-ko-12.8b-inst")
+tokenizer = AutoTokenizer.from_pretrained('/home/closedai/.test/KoQuality/train_llm/train_model/koquality-polyglot-ko-12.8b-inst')
+tokenizer.push_to_hub("nayohan/polyglot-ko-12.8b-inst")
